@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Informatika Kelas 9  (2026/2027)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        academic: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Kustomisasi Scrollbar & Utilitas Visual */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .excel-grid th, .excel-grid td {
+            border: 1px solid #cbd5e1;
+        }
+        .fade-in {
+            animation: fadeIn 0.25s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-academic-200 selection:text-academic-900">
+
+    <!-- ==================== HEADER UTAMA ==================== -->
+    <header class="bg-gradient-to-r from-academic-900 via-academic-800 to-blue-900 text-white shadow-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo & Judul -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center shadow-inner">
+                    <i class="fa-solid fa-laptop-code text-xl text-indigo-200"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm sm:text-base tracking-tight leading-tight">LATIHAN INFORMATIKA IX</h1>
+                    <p class="text-[11px] sm:text-xs text-indigo-200 font-medium">SMP Negeri Ponorogo • TP 2026/2027</p>
+                </div>
+            </div>
+
+            <!-- Kanan Header: Timer (saat ujian) & Pengaturan Guru -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <!-- Timer Badge (Tersembunyi sebelum ujian mulai) -->
+                <div id="header-timer" class="hidden items-center space-x-2 bg-white/15 border border-white/20 px-3 py-1.5 rounded-xl font-mono text-sm sm:text-base font-semibold shadow-sm">
+                    <i class="fa-regular fa-clock text-amber-300 animate-pulse"></i>
+                    <span id="timer-display">60:00</span>
+                </div>
+
+                <!-- Status Koneksi Spreadsheet -->
+                <div id="webhook-status-badge" class="hidden md:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white/10 border border-white/15">
+                    <span id="webhook-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span id="webhook-status-text">Mode Lokal</span>
+                </div>
+
+                <!-- Tombol Panel Guru / Pengaturan -->
+                <button onclick="openTeacherAuth()" title="Pengaturan & Rekap Nilai Guru" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 transition border border-white/15 text-white flex items-center space-x-1.5">
+                    <i class="fa-solid fa-gear text-sm sm:text-base"></i>
+                    <span class="hidden sm:inline text-xs font-semibold">Panel Guru</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== KONTEN UTAMA ==================== -->
+    <main class="flex-grow flex flex-col justify-center">
+
+        <!-- 1. HALAMAN LOGIN / IDENTITAS SISWA -->
+        <section id="view-login" class="max-w-2xl w-full mx-auto px-4 py-8 sm:py-12 fade-in">
+            <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/70 border border-slate-200/80 overflow-hidden">
+                <!-- Banner Atas Kartu -->
+                <div class="bg-gradient-to-r from-academic-600 to-blue-600 p-6 sm:p-8 text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-semibold tracking-wider uppercase mb-2">
+                            Sempaza
+                        </span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Latihan</h2>
+                        <p class="text-indigo-100 text-sm mt-1">Mata Pelajaran Informatika • Kelas IX SMP • 30 Soal Pilihan Ganda</p>
+                    </div>
+                    <i class="fa-solid fa-graduation-cap absolute -right-4 -bottom-6 text-8xl text-white/10 rotate-12"></i>
+                </div>
+
+                <!-- Form Identitas -->
+                <form id="login-form" onsubmit="startExam(event)" class="p-6 sm:p-8 space-y-5">
+                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start space-x-3 text-amber-900 text-xs sm:text-sm">
+                        <i class="fa-solid fa-circle-info text-amber-500 text-base mt-0.5"></i>
+                        <div>
+                            <p class="font-semibold">Petunjuk Pengerjaan:</p>
+                            <ul class="list-disc list-inside mt-1 space-y-0.5 text-amber-800">
+                                <li>Isi identitas lengkap dengan benar sebelum memulai ujian.</li>
+                                <li>Waktu pengerjaan adalah <strong>60 menit</strong> untuk <strong>30 soal</strong> (Nilai Maksimal: 100).</li>
+                                <li>Hasil ujian akan otomatis dikirim ke Spreadsheet guru setelah selesai.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label for="student-name" class="block text-sm font-semibold text-slate-700 mb-1.5">Nama Lengkap Siswa <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                    <i class="fa-solid fa-user"></i>
+                                </span>
+                                <input type="text" id="student-name" required placeholder="Contoh: Ahmad Budi Santoso"
+                                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:border-academic-600 focus:ring-4 focus:ring-academic-600/10 outline-none transition text-sm sm:text-base font-medium">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="student-id" class="block text-sm font-semibold text-slate-700 mb-1.5">Nomor Peserta / Absen <span class="text-rose-500">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                        <i class="fa-solid fa-id-card"></i>
+                                    </span>
+                                    <input type="text" id="student-id" required placeholder="Contoh: 01 atau 26-09-001"
+                                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:border-academic-600 focus:ring-4 focus:ring-academic-600/10 outline-none transition text-sm sm:text-base font-medium">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="student-class" class="block text-sm font-semibold text-slate-700 mb-1.5">Kelas <span class="text-rose-500">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                        <i class="fa-solid fa-users-rectangle"></i>
+                                    </span>
+                                    <select id="student-class" required
+                                        class="w-full pl-10 pr-8 py-3 rounded-xl border border-slate-300 focus:border-academic-600 focus:ring-4 focus:ring-academic-600/10 outline-none transition text-sm sm:text-base font-medium bg-white">
+                                        <option value="" disabled selected>-- Pilih Kelas --</option>
+                                        <option value="IX A">IX A</option>
+                                        <option value="IX B">IX B</option>
+                                        <option value="IX C">IX C</option>
+                                        <option value="IX D">IX D</option>
+                                        <option value="IX E">IX E</option>
+                                        <option value="IX F">IX F</option>
+                                        <option value="IX G">IX G</option>
+                                        <option value="IX H">IX H</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-academic-600 to-blue-600 hover:from-academic-700 hover:to-blue-700 text-white font-bold text-base shadow-lg shadow-academic-600/25 active:scale-[0.99] transition flex items-center justify-center space-x-2">
+                            <span>Mulai Mengerjakan Ujian</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- 2. ANTARMUKA UJIAN (CBT) -->
+        <section id="view-exam" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 fade-in">
+            <!-- Info Bar Peserta -->
+            <div class="bg-white rounded-2xl border border-slate-200 px-4 py-3 mb-5 flex flex-wrap items-center justify-between gap-2 shadow-sm">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-academic-100 text-academic-700 flex items-center justify-center font-bold text-sm" id="exam-avatar">
+                        S
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-800 text-sm sm:text-base leading-tight" id="exam-student-name">Nama Siswa</p>
+                        <p class="text-xs text-slate-500 font-medium">
+                            Kelas: <span id="exam-student-class" class="text-academic-700 font-semibold">IX A</span> • 
+                            No. Peserta: <span id="exam-student-id" class="font-mono text-slate-700">001</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3 text-xs sm:text-sm">
+                    <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
+                        Dijawab: <span id="answered-count">0</span>/30
+                    </span>
+                </div>
+            </div>
+
+            <!-- Grid Utama: Kiri (Area Soal) & Kanan (Navigasi Nomor) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Kolom Kiri: Konten Soal -->
+                <div class="lg:col-span-8 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                    <!-- Header Nomor Soal -->
+                    <div class="bg-slate-50 border-b border-slate-200 px-5 sm:px-7 py-4 flex items-center justify-between">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="px-3 py-1 rounded-xl bg-academic-600 text-white font-bold text-sm shadow-sm">
+                                Soal No. <span id="current-q-num">1</span>
+                            </span>
+                            <span id="doubt-badge" class="hidden px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 border border-amber-300 text-xs font-semibold">
+                                <i class="fa-solid fa-flag mr-1"></i>Ragu-ragu
+                            </span>
+                        </div>
+                        <span class="text-xs font-medium text-slate-400">Pilihan Ganda</span>
+                    </div>
+
+                    <!-- Isi Pertanyaan & Tabel/Visual -->
+                    <div class="p-5 sm:p-7 flex-grow space-y-5">
+                        <div id="question-text" class="text-slate-800 text-base sm:text-lg font-medium leading-relaxed">
+                            <!-- Teks pertanyaan dirender di sini -->
+                        </div>
+
+                        <!-- Kontainer Visual / Tabel / Grid Excel -->
+                        <div id="question-media" class="hidden overflow-x-auto">
+                            <!-- Tabel HTML atau Grid Excel dirender di sini -->
+                        </div>
+
+                        <!-- Pilihan Jawaban A, B, C, D -->
+                        <div id="options-container" class="space-y-3 pt-2">
+                            <!-- Opsi dirender via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Footer Navigasi Soal -->
+                    <div class="bg-slate-50 border-t border-slate-200 px-5 sm:px-7 py-4 flex flex-wrap items-center justify-between gap-3">
+                        <button id="btn-prev" onclick="prevQuestion()" class="px-4 py-2.5 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition flex items-center space-x-2 disabled:opacity-40 disabled:pointer-events-none">
+                            <i class="fa-solid fa-chevron-left"></i>
+                            <span>Sebelumnya</span>
+                        </button>
+
+                        <button id="btn-doubt" onclick="toggleDoubt()" class="px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-300 hover:bg-amber-100 text-amber-800 font-semibold text-sm transition flex items-center space-x-2">
+                            <i class="fa-regular fa-flag"></i>
+                            <span>Ragu-ragu</span>
+                        </button>
+
+                        <button id="btn-next" onclick="nextQuestion()" class="px-5 py-2.5 rounded-xl bg-academic-600 hover:bg-academic-700 text-white font-semibold text-sm shadow-sm transition flex items-center space-x-2">
+                            <span>Selanjutnya</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <button id="btn-finish" onclick="confirmFinishExam()" class="hidden px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/20 transition flex items-center space-x-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Selesai & Kirim Jawaban</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan: Navigasi Nomor Soal -->
+                <div class="lg:col-span-4 bg-white rounded-3xl border border-slate-200 shadow-sm p-5 sm:p-6 sticky top-20">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center space-x-2">
+                            <i class="fa-solid fa-grip text-academic-600"></i>
+                            <span>Navigasi Nomor Soal</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 font-medium">30 Soal</span>
+                    </div>
+
+                    <!-- Grid 30 Nomor -->
+                    <div id="question-nav-grid" class="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-5 gap-2 mb-5">
+                        <!-- Tombol 1-30 dirender via JS -->
+                    </div>
+
+                    <!-- Legenda Warna -->
+                    <div class="border-t border-slate-100 pt-4 space-y-2 text-xs text-slate-600">
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center space-x-2">
+                                <span class="w-3.5 h-3.5 rounded bg-emerald-500 inline-block"></span>
+                                <span>Sudah Dijawab</span>
+                            </span>
+                            <span class="font-bold text-slate-800" id="legend-answered">0</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center space-x-2">
+                                <span class="w-3.5 h-3.5 rounded bg-amber-400 inline-block"></span>
+                                <span>Ragu-ragu</span>
+                            </span>
+                            <span class="font-bold text-slate-800" id="legend-doubt">0</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center space-x-2">
+                                <span class="w-3.5 h-3.5 rounded bg-slate-100 border border-slate-300 inline-block"></span>
+                                <span>Belum Dijawab</span>
+                            </span>
+                            <span class="font-bold text-slate-800" id="legend-unanswered">30</span>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Selesai Cepat di Panel Samping -->
+                    <button onclick="confirmFinishExam()" class="mt-5 w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm transition flex items-center justify-center space-x-2 shadow-sm">
+                        <i class="fa-solid fa-check-double text-emerald-400"></i>
+                        <span>Kumpulkan Ujian Sekarang</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. HALAMAN HASIL & PENGIRIMAN KE SPREADSHEET -->
+        <section id="view-result" class="hidden max-w-3xl w-full mx-auto px-4 py-8 sm:py-10 fade-in">
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+                <!-- Header Hasil -->
+                <div class="bg-gradient-to-br from-academic-800 via-academic-700 to-blue-700 p-6 sm:p-8 text-white text-center relative">
+                    <div class="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center mx-auto mb-3 shadow-lg">
+                        <i class="fa-solid fa-award text-3xl text-amber-300"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold">Ujian Telah Selesai!</h2>
+                    <p class="text-indigo-100 text-sm mt-1">Penilaian Sumatif Akhir Semester Ganjil • Informatika Kelas IX</p>
+                </div>
+
+                <div class="p-6 sm:p-8 space-y-6">
+                    <!-- Status Pengiriman Google Spreadsheet -->
+                    <div id="sync-status-box" class="rounded-2xl p-4 border flex items-center justify-between gap-3 bg-blue-50 border-blue-200 text-blue-900">
+                        <div class="flex items-center space-x-3">
+                            <i id="sync-icon" class="fa-solid fa-spinner fa-spin text-xl text-blue-600"></i>
+                            <div>
+                                <p id="sync-title" class="font-bold text-sm">Mengirim hasil ke Google Spreadsheet...</p>
+                                <p id="sync-desc" class="text-xs opacity-85 mt-0.5">Mohon tunggu sebentar, jangan tutup halaman ini.</p>
+                            </div>
+                        </div>
+                        <button id="btn-retry-sync" onclick="retrySendToSpreadsheet()" class="hidden px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shrink-0">
+                            Kirim Ulang
+                        </button>
+                    </div>
+
+                    <!-- Kartu Nilai Utama -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jawaban Benar</p>
+                            <p class="text-3xl font-extrabold text-emerald-600 mt-1" id="res-correct">0</p>
+                            <p class="text-xs text-slate-400 mt-0.5">dari 30 soal</p>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jawaban Salah</p>
+                            <p class="text-3xl font-extrabold text-rose-500 mt-1" id="res-wrong">0</p>
+                            <p class="text-xs text-slate-400 mt-0.5">soal tidak tepat</p>
+                        </div>
+                        <div class="bg-academic-50 border-2 border-academic-500 rounded-2xl p-4 shadow-sm">
+                            <p class="text-xs font-bold text-academic-700 uppercase tracking-wider">Nilai Akhir</p>
+                            <p class="text-4xl font-black text-academic-700 mt-0.5" id="res-score">0</p>
+                            <p class="text-xs text-academic-600 font-medium mt-0.5">Skala Maksimal 100</p>
+                        </div>
+                    </div>
+
+                    <!-- Detail Identitas Siswa -->
+                    <div class="bg-slate-50 rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-2.5 text-sm">
+                        <div class="flex justify-between py-1 border-b border-slate-200/70">
+                            <span class="text-slate-500">Nama Lengkap</span>
+                            <span class="font-bold text-slate-800" id="res-name">-</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-200/70">
+                            <span class="text-slate-500">Nomor Peserta / Absen</span>
+                            <span class="font-mono font-semibold text-slate-800" id="res-id">-</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-200/70">
+                            <span class="text-slate-500">Kelas</span>
+                            <span class="font-bold text-academic-700" id="res-class">-</span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                            <span class="text-slate-500">Waktu Selesai</span>
+                            <span class="font-medium text-slate-700" id="res-timestamp">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi Cadangan CSV & Kembali -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                        <button onclick="downloadSingleResultCSV()" class="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-sm transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-file-csv text-base"></i>
+                            <span>Unduh Bukti Hasil (CSV / Excel)</span>
+                        </button>
+                        <button onclick="resetToLogin()" class="py-3 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span>Selesai & Keluar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            <p>&copy; 2026 MGMP Informatika SMP Kabupaten Ponorogo • Sistem Evaluasi Digital Berbasis Web</p>
+        </div>
+    </footer>
+
+    <!-- ==================== MODAL KONFIRMASI SELESAI UJIAN ==================== -->
+    <div id="modal-confirm" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 fade-in">
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-4">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-800">Konfirmasi Pengumpulan Ujian</h3>
+            <p id="confirm-message" class="text-sm text-slate-600 mt-2 leading-relaxed">
+                Apakah kamu yakin ingin menyelesaikan ujian dan mengirim jawaban sekarang?
+            </p>
+            <div class="mt-6 flex items-center justify-end space-x-3">
+                <button onclick="closeConfirmModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition">
+                    Periksa Lagi
+                </button>
+                <button onclick="finishExam()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition">
+                    Ya, Kirim Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL PIN GURU ==================== -->
+    <div id="modal-teacher-pin" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 fade-in">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-10 h-10 rounded-xl bg-academic-100 text-academic-700 flex items-center justify-center">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base">Akses Panel Guru</h3>
+                        <p class="text-xs text-slate-500">Masukkan PIN (Default: 1234)</p>
+                    </div>
+                </div>
+                <button onclick="closeTeacherPinModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="verifyTeacherPin(event)" class="space-y-4">
+                <input type="password" id="teacher-pin-input" maxlength="8" placeholder="••••" required
+                    class="w-full text-center tracking-[0.5em] font-mono text-xl py-3 rounded-xl border border-slate-300 focus:border-academic-600 focus:ring-4 focus:ring-academic-600/10 outline-none">
+                <p id="pin-error-msg" class="hidden text-xs text-rose-600 font-semibold text-center">PIN salah! Gunakan PIN default: 1234</p>
+                <button type="submit" class="w-full py-3 rounded-xl bg-academic-600 hover:bg-academic-700 text-white font-bold text-sm transition">
+                    Masuk ke Dashboard Guru
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL DASHBOARD & PENGATURAN GURU ==================== -->
+    <div id="modal-teacher-panel" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden fade-in">
+            <!-- Header Panel Guru -->
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between shrink-0">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-chalkboard-user text-indigo-400 text-xl"></i>
+                    <div>
+                        <h3 class="font-bold text-base sm:text-lg">Dashboard Guru & Integrasi Google Spreadsheet</h3>
+                        <p class="text-xs text-slate-400">Kelola Webhook Google Sheets, Panduan Apps Script, & Rekap Nilai Siswa</p>
+                    </div>
+                </div>
+                <button onclick="closeTeacherPanel()" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Tabs Navigasi -->
+            <div class="bg-slate-100 px-6 pt-3 border-b border-slate-200 flex space-x-2 shrink-0 overflow-x-auto">
+                <button onclick="switchTeacherTab('tab-webhook')" id="btn-tab-webhook" class="px-4 py-2.5 rounded-t-xl font-bold text-xs sm:text-sm bg-white text-academic-700 border-t border-x border-slate-200">
+                    <i class="fa-solid fa-link mr-1.5"></i>Pengaturan Spreadsheet
+                </button>
+                <button onclick="switchTeacherTab('tab-rekap')" id="btn-tab-rekap" class="px-4 py-2.5 rounded-t-xl font-semibold text-xs sm:text-sm text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-table mr-1.5"></i>Rekap Nilai Lokal (<span id="local-records-count">0</span>)
+                </button>
+                <button onclick="switchTeacherTab('tab-script')" id="btn-tab-script" class="px-4 py-2.5 rounded-t-xl font-semibold text-xs sm:text-sm text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-code mr-1.5"></i>Panduan & Kode Apps Script
+                </button>
+            </div>
+
+            <!-- Isi Konten Modal Guru -->
+            <div class="p-6 overflow-y-auto flex-grow space-y-6">
+
+                <!-- TAB 1: PENGATURAN WEBHOOK GOOGLE SPREADSHEET -->
+                <div id="tab-webhook" class="space-y-5">
+                    <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 text-sm text-indigo-900">
+                        <p class="font-bold flex items-center space-x-2">
+                            <i class="fa-solid fa-cloud-arrow-up text-indigo-600"></i>
+                            <span>Koneksi Otomatis ke Google Sheets</span>
+                        </p>
+                        <p class="text-xs text-indigo-800 mt-1 leading-relaxed">
+                            Tempelkan <strong>URL Web App Google Apps Script</strong> di bawah ini agar setiap siswa yang menekan tombol <em>"Selesai & Kirim Jawaban"</em> datanya langsung masuk ke baris baru Google Spreadsheet Anda secara real-time.
+                        </p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="block text-sm font-bold text-slate-700">URL Google Apps Script Web App</label>
+                        <input type="url" id="input-webhook-url" placeholder="https://script.google.com/macros/s/AKfycbx.../exec"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-academic-600 focus:ring-4 focus:ring-academic-600/10 outline-none font-mono text-xs sm:text-sm">
+                        <div class="flex flex-wrap gap-3 pt-1">
+                            <button onclick="saveWebhookUrl()" class="px-5 py-2.5 rounded-xl bg-academic-600 hover:bg-academic-700 text-white font-bold text-sm shadow-sm transition flex items-center space-x-2">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span>Simpan Pengaturan URL</span>
+                            </button>
+                            <button onclick="testWebhookConnection()" class="px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-semibold text-sm transition flex items-center space-x-2">
+                                <i class="fa-solid fa-vial"></i>
+                                <span>Kirim Data Tes ke Spreadsheet</span>
+                            </button>
+                            <button onclick="clearWebhookUrl()" class="px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-semibold text-sm transition">
+                                Hapus URL
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="webhook-feedback" class="hidden rounded-xl p-3 text-xs font-semibold"></div>
+                </div>
+
+                <!-- TAB 2: REKAP NILAI LOKAL -->
+                <div id="tab-rekap" class="hidden space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-base">Daftar Hasil Ujian Tersimpan di Perangkat Ini</h4>
+                            <p class="text-xs text-slate-500">Data otomatis dicadangkan di browser sebagai antisipasi jika koneksi internet terputus.</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="exportAllResultsCSV()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-sm transition flex items-center space-x-2">
+                                <i class="fa-solid fa-file-excel"></i>
+                                <span>Unduh Semua ke CSV / Excel</span>
+                            </button>
+                            <button onclick="clearLocalResults()" class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-semibold text-xs transition">
+                                Bersihkan Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-2xl overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
+                                    <th class="py-3 px-4 font-bold">Waktu</th>
+                                    <th class="py-3 px-4 font-bold">No. Peserta</th>
+                                    <th class="py-3 px-4 font-bold">Nama Siswa</th>
+                                    <th class="py-3 px-4 font-bold">Kelas</th>
+                                    <th class="py-3 px-4 font-bold text-center">Benar</th>
+                                    <th class="py-3 px-4 font-bold text-center">Nilai</th>
+                                    <th class="py-3 px-4 font-bold text-center">Status Sync</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rekap-table-body" class="divide-y divide-slate-200">
+                                <!-- Data baris dirender via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB 3: PANDUAN & KODE GOOGLE APPS SCRIPT -->
+                <div id="tab-script" class="hidden space-y-4">
+                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs sm:text-sm text-amber-900 space-y-1.5">
+                        <p class="font-bold">Cara Menghubungkan ke Google Spreadsheet (Hanya 2 Menit):</p>
+                        <ol class="list-decimal list-inside space-y-1 text-amber-800">
+                            <li>Buka <strong>Google Sheets</strong> baru di Google Drive Anda.</li>
+                            <li>Klik menu <strong>Ekstensi (Extensions) &rarr; Apps Script</strong>.</li>
+                            <li>Hapus semua kode bawaan, lalu <strong>Salin &amp; Tempel (Paste)</strong> kode di bawah ini.</li>
+                            <li>Klik ikon <strong>Simpan (Save)</strong>, lalu klik tombol biru <strong>Terapkan (Deploy) &rarr; Deployment baru</strong>.</li>
+                            <li>Pilih jenis: <strong>Aplikasi Web (Web App)</strong>, ubah <em>Yang memiliki akses</em> menjadi <strong>Siapa saja (Anyone)</strong>, lalu klik <strong>Terapkan</strong>.</li>
+                            <li>Salin <strong>URL Aplikasi Web</strong> yang muncul, lalu tempelkan pada tab <em>Pengaturan Spreadsheet</em> di aplikasi ini.</li>
+                        </ol>
+                    </div>
+
+                    <div class="relative">
+                        <div class="flex items-center justify-between bg-slate-800 text-slate-200 px-4 py-2.5 rounded-t-2xl text-xs font-mono">
+                            <span>Code.gs (Google Apps Script)</span>
+                            <button onclick="copyAppsScriptCode()" id="btn-copy-script" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-sans font-semibold transition flex items-center space-x-1.5">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Salin Kode</span>
+                            </button>
+                        </div>
+                        <textarea id="apps-script-code" readonly rows="13" class="w-full bg-slate-900 text-emerald-300 font-mono text-xs p-4 rounded-b-2xl outline-none resize-none leading-relaxed">function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  
+  // Buat header otomatis jika baris pertama masih kosong
+  if (sheet.getLastRow() === 0) {
+    var headers = ["Timestamp", "No Peserta", "Nama Siswa", "Kelas", "Jawaban Benar", "Jawaban Salah", "Nilai Akhir"];
+    for (var i = 1; i <= 30; i++) {
+      headers.push("Soal " + i);
+    }
+    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#e0e7ff");
+  }
+  
+  var data = JSON.parse(e.postData.contents);
+  var row = [
+    data.timestamp,
+    data.noPeserta,
+    data.namaSiswa,
+    data.kelas,
+    data.benar,
+    data.salah,
+    data.nilai
+  ];
+  
+  // Masukkan detail jawaban 1 sampai 30
+  if (data.detailJawaban && Array.isArray(data.detailJawaban)) {
+    for (var j = 0; j < data.detailJawaban.length; j++) {
+      row.push(data.detailJawaban[j]);
+    }
+  }
+  
+  sheet.appendRow(row);
+  return ContentService.createTextOutput(JSON.stringify({ "status": "success" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}</textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== NOTIFIKASI TOAST ==================== -->
+    <div id="toast-box" class="hidden fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-slate-700 text-xs sm:text-sm font-medium flex items-center space-x-2.5 fade-in">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span id="toast-text">Pesan notifikasi</span>
+    </div>
+
+    <!-- ==================== LOGIKA JAVASCRIPT & BANK SOAL ==================== -->
+    <script>
+        // BANK SOAL LENGKAP 30 SOAL BESERTA TABEL & GRID SPREADSHEET
+        const QUESTIONS = [
+            {
+                no: 1,
+                text: "Tabel merupakan salah satu bentuk penyajian informasi yang disusun dalam bentuk ....",
+                options: {
+                    A: "Baris dan kolom.",
+                    B: "Gambar dan simbol tanpa keterangan.",
+                    C: "Paragraf panjang yang berisi penjelasan.",
+                    D: "Diagram yang hanya menggunakan garis."
+                },
+                answer: "A"
+            },
+            {
+                no: 2,
+                text: "Bagian tabel yang berfungsi memberikan gambaran mengenai isi atau informasi yang disajikan disebut ....",
+                options: {
+                    A: "Baris tabel.",
+                    B: "Judul tabel.",
+                    C: "Kolom tabel.",
+                    D: "Sumber data."
+                },
+                answer: "B"
+            },
+            {
+                no: 3,
+                text: "Jenis grafik yang menggunakan batang untuk membandingkan jumlah data dari beberapa kategori disebut ....",
+                options: {
+                    A: "Diagram lingkaran.",
+                    B: "Diagram garis.",
+                    C: "Diagram batang.",
+                    D: "Piktogram."
+                },
+                answer: "C"
+            },
+            {
+                no: 4,
+                text: "Perhatikan tabel berikut!<br>Berdasarkan tabel tersebut, kesimpulan yang paling tepat adalah ....",
+                media: `
+                    <div class="my-3 max-w-md">
+                        <p class="text-xs sm:text-sm font-bold text-slate-700 mb-2">Tabel Jumlah Pengunjung Perpustakaan SMP Harapan</p>
+                        <table class="w-full text-sm border-collapse border border-slate-300 rounded-lg overflow-hidden">
+                            <thead>
+                                <tr class="bg-academic-100 text-academic-900">
+                                    <th class="border border-slate-300 px-4 py-2 text-left">Hari</th>
+                                    <th class="border border-slate-300 px-4 py-2 text-center">Jumlah Pengunjung</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Senin</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">35</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">Selasa</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">40</td></tr>
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Rabu</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">30</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">Kamis</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">45</td></tr>
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Jumat</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">50</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "Jumlah pengunjung setiap hari selalu sama.",
+                    B: "Hari Rabu memiliki jumlah pengunjung terbanyak.",
+                    C: "Jumlah pengunjung selalu mengalami penurunan.",
+                    D: "Jumlah pengunjung tertinggi pada hari Jumat."
+                },
+                answer: "D"
+            },
+            {
+                no: 5,
+                text: "Perhatikan tabel berikut!<br>Berdasarkan tabel tersebut, pernyataan yang tepat adalah ....",
+                media: `
+                    <div class="my-3 max-w-md">
+                        <p class="text-xs sm:text-sm font-bold text-slate-700 mb-2">Tabel Jumlah Siswa yang Mengikuti Ekstrakurikuler</p>
+                        <table class="w-full text-sm border-collapse border border-slate-300">
+                            <thead>
+                                <tr class="bg-academic-100 text-academic-900">
+                                    <th class="border border-slate-300 px-4 py-2 text-left">Ekstrakurikuler</th>
+                                    <th class="border border-slate-300 px-4 py-2 text-center">Jumlah Siswa</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Pramuka</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">40</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">Basket</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">25</td></tr>
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Paduan Suara</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">20</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">Futsal</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">35</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "Peserta basket lebih banyak daripada peserta pramuka.",
+                    B: "Peserta futsal lebih sedikit daripada peserta paduan suara.",
+                    C: "Peserta paduan suara merupakan jumlah terbanyak.",
+                    D: "Peserta pramuka lebih banyak dari peserta futsal."
+                },
+                answer: "D"
+            },
+            {
+                no: 6,
+                text: "Perhatikan ilustrasi diagram batang berikut!<br>Berdasarkan diagram tersebut, kesimpulan yang benar adalah ....",
+                media: `
+                    <div class="my-3 max-w-xl bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-xs">
+                        <p class="font-bold text-slate-800 text-sm sm:text-base">Jumlah Buku yang Dibaca dalam Satu Bulan</p>
+                        <p class="text-xs text-slate-500 mb-4">Setiap blok mewakili 2 buku.</p>
+                        <div class="space-y-3 text-xs sm:text-sm">
+                            <div class="flex items-center gap-3">
+                                <span class="w-14 font-bold text-slate-700">Andi</span>
+                                <div class="flex-1 bg-slate-100 rounded-full h-4 overflow-hidden">
+                                    <div class="bg-sky-500 h-full rounded-full" style="width: 66.6%"></div>
+                                </div>
+                                <span class="w-6 text-right font-bold text-slate-700">8</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-14 font-bold text-slate-700">Budi</span>
+                                <div class="flex-1 bg-slate-100 rounded-full h-4 overflow-hidden">
+                                    <div class="bg-sky-500 h-full rounded-full" style="width: 100%"></div>
+                                </div>
+                                <span class="w-6 text-right font-bold text-slate-700">12</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-14 font-bold text-slate-700">Citra</span>
+                                <div class="flex-1 bg-slate-100 rounded-full h-4 overflow-hidden">
+                                    <div class="bg-sky-500 h-full rounded-full" style="width: 50%"></div>
+                                </div>
+                                <span class="w-6 text-right font-bold text-slate-700">6</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-14 font-bold text-slate-700">Dina</span>
+                                <div class="flex-1 bg-slate-100 rounded-full h-4 overflow-hidden">
+                                    <div class="bg-sky-500 h-full rounded-full" style="width: 83.3%"></div>
+                                </div>
+                                <span class="w-6 text-right font-bold text-slate-700">10</span>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                options: {
+                    A: "Andi membaca buku paling banyak.",
+                    B: "Budi membaca buku paling banyak.",
+                    C: "Citra membaca buku lebih banyak daripada Dina.",
+                    D: "Dina membaca buku paling sedikit."
+                },
+                answer: "B"
+            },
+            {
+                no: 7,
+                text: "Perhatikan tabel berikut!<br>Berdasarkan tabel tersebut, berapakah selisih jumlah sampah yang dikumpulkan kelas dengan hasil terbanyak dan kelas dengan hasil paling sedikit?",
+                media: `
+                    <div class="my-3 max-w-md">
+                        <p class="text-xs sm:text-sm font-bold text-slate-700 mb-2">Tabel Hasil Pengumpulan Sampah untuk Daur Ulang</p>
+                        <table class="w-full text-sm border-collapse border border-slate-300">
+                            <thead>
+                                <tr class="bg-academic-100 text-academic-900">
+                                    <th class="border border-slate-300 px-4 py-2 text-left">Kelas</th>
+                                    <th class="border border-slate-300 px-4 py-2 text-center">Jumlah Sampah (kg)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr><td class="border border-slate-300 px-4 py-1.5">IX A</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">35</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">IX B</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">45</td></tr>
+                                <tr><td class="border border-slate-300 px-4 py-1.5">IX C</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">30</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">IX D</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">50</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "10 kg.",
+                    B: "15 kg.",
+                    C: "20 kg.",
+                    D: "25 kg."
+                },
+                answer: "C"
+            },
+            {
+                no: 8,
+                text: "Perhatikan tabel berikut!<br>Jika seluruh siswa pada tabel tersebut dihitung, berapakah jumlah keseluruhan siswa?",
+                media: `
+                    <div class="my-3 max-w-md">
+                        <p class="text-xs sm:text-sm font-bold text-slate-700 mb-2">Tabel Penggunaan Internet Siswa</p>
+                        <table class="w-full text-sm border-collapse border border-slate-300">
+                            <thead>
+                                <tr class="bg-academic-100 text-academic-900">
+                                    <th class="border border-slate-300 px-4 py-2 text-left">Kegiatan</th>
+                                    <th class="border border-slate-300 px-4 py-2 text-center">Jumlah Siswa</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Belajar daring</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">30</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">Bermain gim</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">25</td></tr>
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Menonton video</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">20</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">Mencari informasi</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">15</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "80 siswa.",
+                    B: "85 siswa.",
+                    C: "90 siswa.",
+                    D: "100 siswa."
+                },
+                answer: "C"
+            },
+            {
+                no: 9,
+                text: "Perhatikan tabel berikut!<br>Pemilik kantin ingin menyediakan tambahan stok untuk makanan yang paling banyak diminati siswa. Berdasarkan tabel tersebut, makanan yang sebaiknya ditambah stoknya adalah ....",
+                media: `
+                    <div class="my-3 max-w-md">
+                        <p class="text-xs sm:text-sm font-bold text-slate-700 mb-2">Tabel Penjualan Makanan di Kantin Sekolah</p>
+                        <table class="w-full text-sm border-collapse border border-slate-300">
+                            <thead>
+                                <tr class="bg-academic-100 text-academic-900">
+                                    <th class="border border-slate-300 px-4 py-2 text-left">Jenis Makanan</th>
+                                    <th class="border border-slate-300 px-4 py-2 text-center">Jumlah Terjual</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Roti</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">40</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">Nasi goreng</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">60</td></tr>
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Mi ayam</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">50</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">Bakso</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">30</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "Roti.",
+                    B: "Nasi goreng.",
+                    C: "Mi ayam.",
+                    D: "Bakso."
+                },
+                answer: "B"
+            },
+            {
+                no: 10,
+                text: "Perhatikan tabel berikut!<br>Berdasarkan tabel tersebut, berapakah rata-rata jumlah pengunjung laboratorium komputer selama lima hari?",
+                media: `
+                    <div class="my-3 max-w-md">
+                        <p class="text-xs sm:text-sm font-bold text-slate-700 mb-2">Tabel Jumlah Pengunjung Laboratorium Komputer</p>
+                        <table class="w-full text-sm border-collapse border border-slate-300">
+                            <thead>
+                                <tr class="bg-academic-100 text-academic-900">
+                                    <th class="border border-slate-300 px-4 py-2 text-left">Hari</th>
+                                    <th class="border border-slate-300 px-4 py-2 text-center">Jumlah Pengunjung</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Senin</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">20</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">Selasa</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">25</td></tr>
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Rabu</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">30</td></tr>
+                                <tr class="bg-slate-50"><td class="border border-slate-300 px-4 py-1.5">Kamis</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">35</td></tr>
+                                <tr><td class="border border-slate-300 px-4 py-1.5">Jumat</td><td class="border border-slate-300 px-4 py-1.5 text-center font-medium">40</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "25 orang.",
+                    B: "28 orang.",
+                    C: "30 orang.",
+                    D: "35 orang."
+                },
+                answer: "C"
+            },
+            {
+                no: 11,
+                text: "Dalam aplikasi spreadsheet, fungsi <code class='px-1.5 py-0.5 bg-slate-100 rounded font-mono text-academic-700 font-semibold'>SUM</code> digunakan untuk ....",
+                options: {
+                    A: "Menghitung banyaknya sel yang berisi angka.",
+                    B: "Menghitung rata-rata dari sejumlah data.",
+                    C: "Menentukan nilai terbesar dalam suatu rentang.",
+                    D: "Menjumlahkan nilai dalam rentang sel."
+                },
+                answer: "D"
+            },
+            {
+                no: 12,
+                text: "Fungsi <code class='px-1.5 py-0.5 bg-slate-100 rounded font-mono text-academic-700 font-semibold'>COUNT</code> pada spreadsheet digunakan untuk ....",
+                options: {
+                    A: "Menghitung jumlah sel yang berisi angka.",
+                    B: "Menghitung jumlah seluruh sel yang tidak kosong.",
+                    C: "Menjumlahkan nilai berdasarkan kriteria tertentu.",
+                    D: "Menghitung jumlah sel yang memenuhi suatu kondisi."
+                },
+                answer: "A"
+            },
+            {
+                no: 13,
+                text: "Fungsi <code class='px-1.5 py-0.5 bg-slate-100 rounded font-mono text-academic-700 font-semibold'>IF</code> dalam spreadsheet digunakan untuk ....",
+                options: {
+                    A: "Menjumlahkan seluruh data dalam tabel.",
+                    B: "Menghitung banyaknya data berbentuk angka.",
+                    C: "Menghasilkan nilai berdasarkan suatu kondisi logika.",
+                    D: "Menghitung jumlah data yang memenuhi kriteria dan kondisi tertentu."
+                },
+                answer: "C"
+            },
+            {
+                no: 14,
+                text: "Seorang siswa ingin menghitung total seluruh nilai penjualan pada tabel tanpa membedakan jenis barang. Fungsi yang paling tepat digunakan adalah ....",
+                options: {
+                    A: "COUNTIF",
+                    B: "SUMIF",
+                    C: "IF",
+                    D: "SUM"
+                },
+                answer: "D"
+            },
+            {
+                no: 15,
+                text: "Perhatikan data spreadsheet berikut!<br>Jika digunakan rumus <code class='px-1.5 py-0.5 bg-slate-100 rounded font-mono text-academic-700 font-semibold'>=COUNT(A1:A6)</code>, hasilnya adalah <strong>4</strong>. Alasan yang tepat mengenai hasil tersebut adalah ....",
+                media: `
+                    <div class="my-3 inline-block">
+                        <table class="excel-grid text-sm font-mono bg-white shadow-xs">
+                            <thead>
+                                <tr class="bg-slate-200 text-slate-600 text-xs">
+                                    <th class="w-10 py-1 text-center bg-slate-300"></th>
+                                    <th class="w-40 py-1 text-center font-bold">A</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs text-center py-1 font-bold">1</td><td class="px-3 py-1 text-center bg-blue-50/60">10</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs text-center py-1 font-bold">2</td><td class="px-3 py-1 text-center bg-blue-50/60">15</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs text-center py-1 font-bold">3</td><td class="px-3 py-1 text-center bg-blue-50/60 font-sans">Komputer</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs text-center py-1 font-bold">4</td><td class="px-3 py-1 text-center bg-blue-50/60 h-7"></td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs text-center py-1 font-bold">5</td><td class="px-3 py-1 text-center bg-blue-50/60">20</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs text-center py-1 font-bold">6</td><td class="px-3 py-1 text-center bg-blue-50/60">25</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs text-center py-1 font-bold">7</td><td class="px-2 py-1 text-left font-bold text-emerald-700 border-2 border-emerald-600">=COUNT(A1:A6)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "COUNT hanya menghitung sel yang berisi teks.",
+                    B: "COUNT menghitung sel yang berisi angka.",
+                    C: "COUNT menghitung seluruh sel yang tidak kosong.",
+                    D: "COUNT menghitung jumlah baris dalam tabel."
+                },
+                answer: "B"
+            },
+            {
+                no: 16,
+                text: "Perhatikan tabel berikut!<br>Seorang siswa menggunakan rumus <code class='px-1.5 py-0.5 bg-slate-100 rounded font-mono text-academic-700 font-semibold'>=SUMIF(B2:B6;\"Buku\";C2:C6)</code>. Informasi yang dihasilkan dari rumus tersebut adalah ....",
+                media: `
+                    <div class="my-3 inline-block">
+                        <p class="text-xs sm:text-sm font-bold text-slate-700 mb-1.5">Data Penjualan Alat Tulis</p>
+                        <table class="excel-grid text-sm bg-white shadow-xs">
+                            <thead>
+                                <tr class="bg-slate-200 text-slate-600 text-xs font-mono">
+                                    <th class="w-9 py-1 text-center bg-slate-300"></th>
+                                    <th class="w-14 py-1 text-center font-bold">A</th>
+                                    <th class="w-32 py-1 text-center font-bold">B</th>
+                                    <th class="w-28 py-1 text-center font-bold">C</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-yellow-300 font-bold text-slate-900">
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">1</td>
+                                    <td class="px-2 py-1 text-center">No</td>
+                                    <td class="px-3 py-1 text-left">Barang</td>
+                                    <td class="px-3 py-1 text-center">Penjualan</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">2</td>
+                                    <td class="px-2 py-1 text-center">1</td>
+                                    <td class="px-3 py-1">Buku</td>
+                                    <td class="px-3 py-1 text-center">20</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">3</td>
+                                    <td class="px-2 py-1 text-center">2</td>
+                                    <td class="px-3 py-1">Pensil</td>
+                                    <td class="px-3 py-1 text-center">15</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">4</td>
+                                    <td class="px-2 py-1 text-center">3</td>
+                                    <td class="px-3 py-1">Buku</td>
+                                    <td class="px-3 py-1 text-center">30</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">5</td>
+                                    <td class="px-2 py-1 text-center">4</td>
+                                    <td class="px-3 py-1">Penghapus</td>
+                                    <td class="px-3 py-1 text-center">10</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">6</td>
+                                    <td class="px-2 py-1 text-center">5</td>
+                                    <td class="px-3 py-1">Buku</td>
+                                    <td class="px-3 py-1 text-center">25</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "Jumlah seluruh jenis barang yang dijual.",
+                    B: "Banyaknya barang yang memiliki nama Buku.",
+                    C: "Total penjualan barang yang bernama Buku.",
+                    D: "Rata-rata penjualan seluruh barang."
+                },
+                answer: "C"
+            },
+            {
+                no: 17,
+                text: "Perhatikan data berikut!<br>Seorang siswa ingin menghitung total seluruh penjualan menggunakan spreadsheet. Rumus dan hasil yang tepat adalah ....",
+                media: `
+                    <div class="my-3 inline-block">
+                        <table class="excel-grid text-sm bg-white shadow-xs">
+                            <thead>
+                                <tr class="bg-slate-200 text-slate-600 text-xs font-mono">
+                                    <th class="w-9 py-1 text-center bg-slate-300"></th>
+                                    <th class="w-14 py-1 text-center font-bold">A</th>
+                                    <th class="w-20 py-1 text-center font-bold">B</th>
+                                    <th class="w-36 py-1 text-center font-bold">C</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-yellow-300 font-bold text-slate-900">
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">1</td>
+                                    <td class="px-2 py-1 text-center">No</td>
+                                    <td class="px-3 py-1 text-center">Sel</td>
+                                    <td class="px-3 py-1 text-center">Nilai Penjualan</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">2</td>
+                                    <td class="px-2 py-1 text-center">1</td>
+                                    <td class="px-3 py-1 text-center font-mono">B2</td>
+                                    <td class="px-3 py-1 text-center">100</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">3</td>
+                                    <td class="px-2 py-1 text-center">2</td>
+                                    <td class="px-3 py-1 text-center font-mono">B3</td>
+                                    <td class="px-3 py-1 text-center">150</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">4</td>
+                                    <td class="px-2 py-1 text-center">3</td>
+                                    <td class="px-3 py-1 text-center font-mono">B4</td>
+                                    <td class="px-3 py-1 text-center">200</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">5</td>
+                                    <td class="px-2 py-1 text-center">4</td>
+                                    <td class="px-3 py-1 text-center font-mono">B5</td>
+                                    <td class="px-3 py-1 text-center">250</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "=COUNT(C2:C5) menghasilkan 4.",
+                    B: "=SUM(C2:C5) menghasilkan 700.",
+                    C: "=SUMIF(C2:C5;\">150\") menghasilkan 450.",
+                    D: "=COUNTIF(C2:C5;\">150\") menghasilkan 2."
+                },
+                answer: "B"
+            },
+            {
+                no: 18,
+                text: "Perhatikan tabel berikut!<br>Guru ingin menghitung jumlah siswa yang berstatus \"Hadir\". Jika data status berada pada sel C2 sampai C7, rumus yang tepat adalah ....",
+                media: `
+                    <div class="my-3 inline-block">
+                        <p class="text-xs sm:text-sm font-bold text-slate-700 mb-1.5">Data Status Kehadiran Siswa</p>
+                        <table class="excel-grid text-sm bg-white shadow-xs">
+                            <thead>
+                                <tr class="bg-slate-200 text-slate-600 text-xs font-mono">
+                                    <th class="w-9 py-1 text-center bg-slate-300"></th>
+                                    <th class="w-14 py-1 text-center font-bold">A</th>
+                                    <th class="w-32 py-1 text-center font-bold">B</th>
+                                    <th class="w-28 py-1 text-center font-bold">C</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-yellow-300 font-bold text-slate-900">
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">1</td>
+                                    <td class="px-2 py-1 text-center">No</td>
+                                    <td class="px-3 py-1 text-left">Nama</td>
+                                    <td class="px-3 py-1 text-left">Status</td>
+                                </tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">2</td><td class="px-2 py-1 text-center">1</td><td class="px-3 py-1">Andi</td><td class="px-3 py-1">Hadir</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">3</td><td class="px-2 py-1 text-center">2</td><td class="px-3 py-1">Budi</td><td class="px-3 py-1">Izin</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">4</td><td class="px-2 py-1 text-center">3</td><td class="px-3 py-1">Citra</td><td class="px-3 py-1">Hadir</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">5</td><td class="px-2 py-1 text-center">4</td><td class="px-3 py-1">Dinda</td><td class="px-3 py-1">Hadir</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">6</td><td class="px-2 py-1 text-center">5</td><td class="px-3 py-1">Eko</td><td class="px-3 py-1">Sakit</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">7</td><td class="px-2 py-1 text-center">6</td><td class="px-3 py-1">Fajar</td><td class="px-3 py-1">Hadir</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "=COUNT(B2:B7)",
+                    B: "=SUMIF(B2:B7;\"Hadir\")",
+                    C: "=IF(B2:B7=\"Hadir\")",
+                    D: "=COUNTIF(B2:B7;\"Hadir\")"
+                },
+                answer: "D"
+            },
+            {
+                no: 19,
+                text: "Seorang guru menetapkan bahwa siswa dinyatakan lulus apabila memperoleh nilai minimal 75. Nilai siswa terdapat pada sel C2. Rumus yang tepat untuk menentukan status kelulusan adalah ....",
+                options: {
+                    A: "=IF(C2>=75;\"Lulus\";\"Tidak Lulus\")",
+                    B: "=IF(C2>75;\"Lulus\";\"Tidak Lulus\")",
+                    C: "=COUNTIF(C2;\">=75\")",
+                    D: "=SUM(C2>=75)"
+                },
+                answer: "A"
+            },
+            {
+                no: 20,
+                text: "Perhatikan tabel berikut!<br>Data jenis minuman berada pada kolom B2:B6, sedangkan jumlah terjual berada pada kolom C2:C6. Jika pemilik kantin ingin menghitung total penjualan minuman jenis \"Teh\", rumus yang tepat adalah ....",
+                media: `
+                    <div class="my-3 inline-block">
+                        <p class="text-xs sm:text-sm font-bold text-slate-700 mb-1.5">Data Penjualan Minuman</p>
+                        <table class="excel-grid text-sm bg-white shadow-xs">
+                            <thead>
+                                <tr class="bg-slate-200 text-slate-600 text-xs font-mono">
+                                    <th class="w-9 py-1 text-center bg-slate-300"></th>
+                                    <th class="w-14 py-1 text-center font-bold">A</th>
+                                    <th class="w-36 py-1 text-center font-bold">B</th>
+                                    <th class="w-32 py-1 text-center font-bold">C</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-yellow-300 font-bold text-slate-900">
+                                    <td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">1</td>
+                                    <td class="px-2 py-1 text-center">No</td>
+                                    <td class="px-3 py-1 text-left">Jenis Minuman</td>
+                                    <td class="px-3 py-1 text-center">Jumlah Terjual</td>
+                                </tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">2</td><td class="px-2 py-1 text-center">1</td><td class="px-3 py-1">Teh</td><td class="px-3 py-1 text-center">20</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">3</td><td class="px-2 py-1 text-center">2</td><td class="px-3 py-1">Susu</td><td class="px-3 py-1 text-center">15</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">4</td><td class="px-2 py-1 text-center">3</td><td class="px-3 py-1">Teh</td><td class="px-3 py-1 text-center">25</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">5</td><td class="px-2 py-1 text-center">4</td><td class="px-3 py-1">Jus</td><td class="px-3 py-1 text-center">10</td></tr>
+                                <tr><td class="bg-slate-200 text-slate-600 text-xs font-mono text-center py-1">6</td><td class="px-2 py-1 text-center">5</td><td class="px-3 py-1">Teh</td><td class="px-3 py-1 text-center">30</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                options: {
+                    A: "=COUNTIF(B2:B6;\"Teh\";C2:C6)",
+                    B: "=SUM(A2:B6)",
+                    C: "=COUNT(A2:A6)",
+                    D: "=SUMIF(B2:B6;\"Teh\";C2:C6)"
+                },
+                answer: "D"
+            },
+            {
+                no: 21,
+                text: "Media sosial merupakan platform digital yang memungkinkan penggunanya untuk ....",
+                options: {
+                    A: "Mengolah data angka secara otomatis tanpa internet untuk dapat dibagikan kepada orang lain.",
+                    B: "Berinteraksi, berkomunikasi, dan berbagi informasi dengan pengguna lain.",
+                    C: "Menyimpan dokumen secara pribadi tanpa dapat dibagikan.",
+                    D: "Mengoperasikan perangkat keras komputer."
+                },
+                answer: "B"
+            },
+            {
+                no: 22,
+                text: "Platform digital yang dikenal sebagai media sosial berbagi video pendek dan memungkinkan pengguna membuat serta mengunggah konten video adalah ....",
+                options: {
+                    A: "Microsoft Excel",
+                    B: "Google Drive",
+                    C: "TikTok",
+                    D: "Microsoft Word"
+                },
+                answer: "C"
+            },
+            {
+                no: 23,
+                text: "Media sosial yang memiliki fungsi utama sebagai sarana berbagi video, seperti YouTube, termasuk jenis media sosial ....",
+                options: {
+                    A: "Berbagi konten video",
+                    B: "Jejaring profesional",
+                    C: "Forum diskusi",
+                    D: "Layanan pesan instan"
+                },
+                answer: "A"
+            },
+            {
+                no: 24,
+                text: "Perhatikan beberapa platform berikut:<br><ol class='list-decimal list-inside my-2 space-y-1 font-medium text-slate-700'><li>Instagram</li><li>LinkedIn</li><li>TikTok</li><li>Facebook</li></ol>Platform yang lebih dikenal sebagai media sosial untuk membangun jaringan profesional dan mencari informasi pekerjaan adalah ....",
+                options: {
+                    A: "Instagram",
+                    B: "Facebook",
+                    C: "TikTok",
+                    D: "LinkedIn"
+                },
+                answer: "D"
+            },
+            {
+                no: 25,
+                text: "Rina menggunakan Instagram untuk mengunggah foto kegiatan sekolah agar dapat dilihat banyak orang. Sementara itu, Dodi menggunakan WhatsApp untuk mengirim pesan kepada teman sekelasnya. Perbedaan utama penggunaan kedua platform tersebut adalah ....",
+                options: {
+                    A: "Instagram hanya digunakan untuk mengirim pesan pribadi, sedangkan WhatsApp untuk mengunggah foto.",
+                    B: "Instagram untuk berbagi konten dan membangun jejaring, sedangkan WhatsApp untuk komunikasi melalui pesan instan.",
+                    C: "Instagram hanya dapat digunakan tanpa internet, sedangkan WhatsApp harus menggunakan komputer.",
+                    D: "Instagram digunakan untuk mengolah dokumen, foto, data dan sebagainya, sedangkan WhatsApp digunakan untuk membuat presentasi, pesan, video."
+                },
+                answer: "B"
+            },
+            {
+                no: 26,
+                text: "Sekelompok peserta didik ingin berdiskusi tentang materi Informatika, bertukar pendapat, dan mendapatkan jawaban dari anggota lain yang memiliki pengalaman serupa. Jenis media sosial yang paling sesuai dengan kebutuhan tersebut adalah ....",
+                options: {
+                    A: "Forum diskusi daring",
+                    B: "Platform berbagi video",
+                    C: "Jejaring sosial berbasis foto",
+                    D: "Platform berbagi musik"
+                },
+                answer: "A"
+            },
+            {
+                no: 27,
+                text: "Andi mendapat tugas membuat video tutorial tentang cara menggunakan aplikasi pengolah kata. Ia ingin mengunggah video tersebut agar dapat ditonton dan dipelajari oleh banyak orang. Platform media sosial yang paling tepat digunakan Andi adalah ....",
+                options: {
+                    A: "LinkedIn",
+                    B: "WhatsApp",
+                    C: "YouTube",
+                    D: "Facebook"
+                },
+                answer: "C"
+            },
+            {
+                no: 28,
+                text: "Ketua kelas IX ingin menyampaikan informasi perubahan jadwal pelajaran kepada seluruh anggota kelas secara cepat. Ia juga ingin anggota kelas dapat memberikan tanggapan secara langsung. Platform yang paling tepat digunakan untuk kebutuhan tersebut adalah ....",
+                options: {
+                    A: "Facebook",
+                    B: "WhatsApp",
+                    C: "YouTube",
+                    D: "Instagram"
+                },
+                answer: "B"
+            },
+            {
+                no: 29,
+                text: "Siswa kelas IX membuat poster digital tentang pentingnya menjaga kebersihan lingkungan sekolah. Mereka ingin membagikan poster tersebut kepada masyarakat luas melalui platform yang mendukung publikasi gambar dan konten visual. Platform yang paling tepat dipilih adalah ....",
+                options: {
+                    A: "Instagram",
+                    B: "Facebook",
+                    C: "X",
+                    D: "Youtube"
+                },
+                answer: "A"
+            },
+            {
+                no: 30,
+                text: "Setelah lulus SMP, Sinta bercita-cita bekerja di bidang desain grafis. Ia ingin mengenal orang-orang yang bekerja di bidang tersebut, melihat portofolio profesional, dan memperoleh informasi tentang peluang karier. Platform media sosial yang paling sesuai dengan kebutuhan membangun jejaring profesional tersebut adalah ....",
+                options: {
+                    A: "TikTok",
+                    B: "WhatsApp",
+                    C: "Instagram",
+                    D: "LinkedIn"
+                },
+                answer: "D"
+            }
+        ];
+
+        // STATE APLIKASI
+        let state = {
+            student: { name: '', id: '', className: '' },
+            currentIndex: 0,
+            answers: new Array(30).fill(null),
+            doubts: new Array(30).fill(false),
+            timeLeft: 60 * 60, // 60 menit dalam detik
+            timerInterval: null,
+            lastResultPayload: null
+        };
+
+        const STORAGE_KEY_WEBHOOK = 'psas_inf9_webhook_url';
+        const STORAGE_KEY_RESULTS = 'psas_inf9_local_results';
+        const TEACHER_PIN = '1234';
+
+        // INISIALISASI SAAT HALAMAN DIMUAT
+        window.addEventListener('DOMContentLoaded', () => {
+            updateWebhookBadge();
+            renderNavGrid();
+        });
+
+        function updateWebhookBadge() {
+            const url = localStorage.getItem(STORAGE_KEY_WEBHOOK);
+            const dot = document.getElementById('webhook-dot');
+            const text = document.getElementById('webhook-status-text');
+            if (url && url.startsWith('http')) {
+                dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                text.textContent = 'Spreadsheet Aktif';
+            } else {
+                dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                text.textContent = 'Mode Lokal / CSV';
+            }
+        }
+
+        // MULAI UJIAN
+        function startExam(e) {
+            e.preventDefault();
+            const name = document.getElementById('student-name').value.trim();
+            const id = document.getElementById('student-id').value.trim();
+            const className = document.getElementById('student-class').value;
+
+            if (!name || !id || !className) return;
+
+            state.student = { name, id, className };
+            state.currentIndex = 0;
+            state.answers = new Array(30).fill(null);
+            state.doubts = new Array(30).fill(false);
+            state.timeLeft = 60 * 60;
+
+            // Tampilkan Identitas di Header Ujian
+            document.getElementById('exam-student-name').textContent = name;
+            document.getElementById('exam-student-id').textContent = id;
+            document.getElementById('exam-student-class').textContent = className;
+            document.getElementById('exam-avatar').textContent = name.charAt(0).toUpperCase();
+
+            // Ganti tampilan ke Ujian
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-result').classList.add('hidden');
+            document.getElementById('view-exam').classList.remove('hidden');
+            document.getElementById('header-timer').classList.remove('hidden');
+            document.getElementById('header-timer').classList.add('flex');
+
+            renderQuestion(0);
+            updateNavGrid();
+            startTimer();
+        }
+
+        // TIMER HITUNG MUNDUR
+        function startTimer() {
+            clearInterval(state.timerInterval);
+            updateTimerDisplay();
+            state.timerInterval = setInterval(() => {
+                state.timeLeft--;
+                updateTimerDisplay();
+                if (state.timeLeft <= 0) {
+                    clearInterval(state.timerInterval);
+                    showToast('Waktu ujian habis! Jawaban otomatis dikirim.', 'warning');
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(state.timeLeft / 60);
+            const secs = state.timeLeft % 60;
+            const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            const displayEl = document.getElementById('timer-display');
+            displayEl.textContent = formatted;
+
+            const badge = document.getElementById('header-timer');
+            if (state.timeLeft <= 300) { // 5 menit terakhir merah
+                badge.classList.remove('bg-white/15');
+                badge.classList.add('bg-rose-600', 'border-rose-400');
+            }
+        }
+
+        // RENDER SOAL SAAT INI
+        function renderQuestion(index) {
+            state.currentIndex = index;
+            const q = QUESTIONS[index];
+
+            document.getElementById('current-q-num').textContent = q.no;
+            document.getElementById('question-text').innerHTML = q.text;
+
+            // Render Media (Tabel / Visual / Grid Excel)
+            const mediaContainer = document.getElementById('question-media');
+            if (q.media) {
+                mediaContainer.innerHTML = q.media;
+                mediaContainer.classList.remove('hidden');
+            } else {
+                mediaContainer.innerHTML = '';
+                mediaContainer.classList.add('hidden');
+            }
+
+            // Badge Ragu-ragu
+            const doubtBadge = document.getElementById('doubt-badge');
+            const btnDoubt = document.getElementById('btn-doubt');
+            if (state.doubts[index]) {
+                doubtBadge.classList.remove('hidden');
+                btnDoubt.classList.add('bg-amber-400', 'text-amber-950', 'border-amber-500');
+                btnDoubt.classList.remove('bg-amber-50', 'text-amber-800');
+            } else {
+                doubtBadge.classList.add('hidden');
+                btnDoubt.classList.remove('bg-amber-400', 'text-amber-950', 'border-amber-500');
+                btnDoubt.classList.add('bg-amber-50', 'text-amber-800');
+            }
+
+            // Render Pilihan A, B, C, D
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            const keys = ['A', 'B', 'C', 'D'];
+
+            keys.forEach(key => {
+                const isSelected = state.answers[index] === key;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectOption(key);
+                btn.className = `w-full text-left p-3.5 sm:p-4 rounded-2xl border-2 transition flex items-start space-x-3.5 group ${
+                    isSelected
+                        ? 'border-academic-600 bg-academic-50/80 shadow-xs'
+                        : 'border-slate-200 hover:border-academic-300 hover:bg-slate-50'
+                }`;
+
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 transition ${
+                        isSelected
+                            ? 'bg-academic-600 text-white shadow-xs'
+                            : 'bg-slate-100 text-slate-600 group-hover:bg-academic-100 group-hover:text-academic-700'
+                    }">
+                        ${key}
+                    </span>
+                    <span class="pt-1 text-sm sm:text-base font-medium ${isSelected ? 'text-academic-950 font-semibold' : 'text-slate-700'}">
+                        ${q.options[key]}
+                    </span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Atur Tombol Navigasi Bawah
+            document.getElementById('btn-prev').disabled = (index === 0);
+            if (index === QUESTIONS.length - 1) {
+                document.getElementById('btn-next').classList.add('hidden');
+                document.getElementById('btn-finish').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-next').classList.remove('hidden');
+                document.getElementById('btn-finish').classList.add('hidden');
+            }
+
+            updateNavGrid();
+        }
+
+        function selectOption(key) {
+            state.answers[state.currentIndex] = key;
+            renderQuestion(state.currentIndex);
+        }
+
+        function toggleDoubt() {
+            state.doubts[state.currentIndex] = !state.doubts[state.currentIndex];
+            renderQuestion(state.currentIndex);
+        }
+
+        function prevQuestion() {
+            if (state.currentIndex > 0) {
+                renderQuestion(state.currentIndex - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (state.currentIndex < QUESTIONS.length - 1) {
+                renderQuestion(state.currentIndex + 1);
+            }
+        }
+
+        // NAVIGASI NOMOR 1 - 30
+        function renderNavGrid() {
+            const grid = document.getElementById('question-nav-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = i + 1;
+                btn.onclick = () => renderQuestion(i);
+                btn.id = `nav-btn-${i}`;
+                btn.className = 'h-10 rounded-xl font-bold text-xs sm:text-sm border transition flex items-center justify-center';
+                grid.appendChild(btn);
+            }
+        }
+
+        function updateNavGrid() {
+            let answeredCount = 0;
+            let doubtCount = 0;
+            let unansweredCount = 0;
+
+            for (let i = 0; i < 30; i++) {
+                const btn = document.getElementById(`nav-btn-${i}`);
+                if (!btn) continue;
+
+                const isCurrent = (i === state.currentIndex);
+                const isDoubt = state.doubts[i];
+                const isAnswered = state.answers[i] !== null;
+
+                if (isDoubt) doubtCount++;
+                else if (isAnswered) answeredCount++;
+                else unansweredCount++;
+
+                let baseClass = 'h-10 rounded-xl font-bold text-xs sm:text-sm transition flex items-center justify-center ';
+                if (isDoubt) {
+                    baseClass += 'bg-amber-400 text-amber-950 border-amber-500 ';
+                } else if (isAnswered) {
+                    baseClass += 'bg-emerald-500 text-white border-emerald-600 ';
+                } else {
+                    baseClass += 'bg-slate-100 text-slate-600 border-slate-300 hover:bg-slate-200 ';
+                }
+
+                if (isCurrent) {
+                    baseClass += 'ring-2 ring-offset-2 ring-academic-600 scale-105 ';
+                }
+
+                btn.className = baseClass;
+            }
+
+            document.getElementById('answered-count').textContent = answeredCount + doubtCount;
+            document.getElementById('legend-answered').textContent = answeredCount;
+            document.getElementById('legend-doubt').textContent = doubtCount;
+            document.getElementById('legend-unanswered').textContent = unansweredCount;
+        }
+
+        // KONFIRMASI SELESAI UJIAN
+        function confirmFinishExam() {
+            const unanswered = state.answers.filter(a => a === null).length;
+            const doubts = state.doubts.filter(d => d === true).length;
+            let msg = 'Apakah kamu yakin ingin menyelesaikan ujian dan mengirim jawaban sekarang?';
+
+            if (unanswered > 0 || doubts > 0) {
+                msg = `Perhatian: Masih ada <strong>${unanswered} soal belum dijawab</strong> dan <strong>${doubts} soal ditandai ragu-ragu</strong>. Yakin ingin tetap mengumpulkan?`;
+            }
+
+            document.getElementById('confirm-message').innerHTML = msg;
+            document.getElementById('modal-confirm').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('modal-confirm').classList.add('hidden');
+        }
+
+        // HITUNG NILAI & KIRIM KE SPREADSHEET
+        async function finishExam() {
+            closeConfirmModal();
+            clearInterval(state.timerInterval);
+
+            // Hitung Skor
+            let correct = 0;
+            let wrong = 0;
+            const detailAnswers = [];
+
+            QUESTIONS.forEach((q, idx) => {
+                const userAns = state.answers[idx] || '-';
+                detailAnswers.push(userAns);
+                if (userAns === q.answer) {
+                    correct++;
+                } else {
+                    wrong++;
+                }
+            });
+
+            // Rumus Nilai Maksimal 100: (Benar / 30) * 100 dibulatkan 2 desimal rapi
+            const rawScore = (correct / 30) * 100;
+            const finalScore = Number.isInteger(rawScore) ? rawScore : Number(rawScore.toFixed(2));
+
+            const now = new Date();
+            const timestamp = now.toLocaleString('id-ID', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+
+            const payload = {
+                timestamp: timestamp,
+                noPeserta: state.student.id,
+                namaSiswa: state.student.name,
+                kelas: state.student.className,
+                benar: correct,
+                salah: wrong,
+                nilai: finalScore,
+                detailJawaban: detailAnswers,
+                synced: false
+            };
+
+            state.lastResultPayload = payload;
+
+            // Tampilkan Halaman Hasil
+            document.getElementById('view-exam').classList.add('hidden');
+            document.getElementById('header-timer').classList.add('hidden');
+            document.getElementById('header-timer').classList.remove('flex');
+            document.getElementById('view-result').classList.remove('hidden');
+
+            document.getElementById('res-correct').textContent = correct;
+            document.getElementById('res-wrong').textContent = wrong;
+            document.getElementById('res-score').textContent = finalScore;
+            document.getElementById('res-name').textContent = payload.namaSiswa;
+            document.getElementById('res-id').textContent = payload.noPeserta;
+            document.getElementById('res-class').textContent = payload.kelas;
+            document.getElementById('res-timestamp').textContent = payload.timestamp;
+
+            // Simpan ke LocalStorage sebagai riwayat/cadangan guru
+            saveResultLocally(payload);
+
+            // Kirim ke Google Spreadsheet jika URL Webhook tersedia
+            await sendPayloadToGoogleSheets(payload);
+        }
+
+        function saveResultLocally(payload) {
+            try {
+                const existing = JSON.parse(localStorage.getItem(STORAGE_KEY_RESULTS) || '[]');
+                existing.unshift(payload);
+                localStorage.setItem(STORAGE_KEY_RESULTS, JSON.stringify(existing));
+            } catch (err) {
+                console.error('Gagal menyimpan riwayat lokal:', err);
+            }
+        }
+
+        function markLocalResultSynced(timestamp, noPeserta) {
+            try {
+                const existing = JSON.parse(localStorage.getItem(STORAGE_KEY_RESULTS) || '[]');
+                const idx = existing.findIndex(r => r.timestamp === timestamp && r.noPeserta === noPeserta);
+                if (idx !== -1) {
+                    existing[idx].synced = true;
+                    localStorage.setItem(STORAGE_KEY_RESULTS, JSON.stringify(existing));
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function sendPayloadToGoogleSheets(payload) {
+            const webhookUrl = localStorage.getItem(STORAGE_KEY_WEBHOOK);
+            const box = document.getElementById('sync-status-box');
+            const icon = document.getElementById('sync-icon');
+            const title = document.getElementById('sync-title');
+            const desc = document.getElementById('sync-desc');
+            const retryBtn = document.getElementById('btn-retry-sync');
+
+            if (!webhookUrl || !webhookUrl.startsWith('http')) {
+                box.className = 'rounded-2xl p-4 border flex items-center justify-between gap-3 bg-amber-50 border-amber-200 text-amber-900';
+                icon.className = 'fa-solid fa-database text-xl text-amber-600';
+                title.textContent = 'Tersimpan di Perangkat (URL Spreadsheet Belum Diatur)';
+                desc.textContent = 'Silakan unduh file CSV di bawah ini sebagai bukti hasil ujian atau hubungi guru pengawas.';
+                retryBtn.classList.add('hidden');
+                return;
+            }
+
+            // Status Loading
+            box.className = 'rounded-2xl p-4 border flex items-center justify-between gap-3 bg-blue-50 border-blue-200 text-blue-900';
+            icon.className = 'fa-solid fa-spinner fa-spin text-xl text-blue-600';
+            title.textContent = 'Mengirim hasil langsung ke Google Spreadsheet...';
+            desc.textContent = 'Menghubungkan ke server Google Apps Script...';
+            retryBtn.classList.add('hidden');
+
+            try {
+                // Menggunakan mode 'no-cors' dengan Content-Type 'text/plain' agar Google Apps Script menerima JSON tanpa blokir CORS preflight
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                payload.synced = true;
+                markLocalResultSynced(payload.timestamp, payload.noPeserta);
+
+                box.className = 'rounded-2xl p-4 border flex items-center justify-between gap-3 bg-emerald-50 border-emerald-200 text-emerald-900';
+                icon.className = 'fa-solid fa-circle-check text-xl text-emerald-600';
+                title.textContent = 'Berhasil Terkirim ke Google Spreadsheet!';
+                desc.textContent = 'Nilai dan rincian jawaban kamu telah tercatat otomatis di lembar rekap guru.';
+                retryBtn.classList.add('hidden');
+            } catch (error) {
+                console.error('Error pengiriman Spreadsheet:', error);
+                box.className = 'rounded-2xl p-4 border flex items-center justify-between gap-3 bg-rose-50 border-rose-200 text-rose-900';
+                icon.className = 'fa-solid fa-circle-exclamation text-xl text-rose-600';
+                title.textContent = 'Gagal Mengirim Otomatis ke Spreadsheet';
+                desc.textContent = 'Periksa koneksi internet Anda lalu klik Kirim Ulang, atau unduh file CSV sebagai cadangan.';
+                retryBtn.classList.remove('hidden');
+            }
+        }
+
+        function retrySendToSpreadsheet() {
+            if (state.lastResultPayload) {
+                sendPayloadToGoogleSheets(state.lastResultPayload);
+            }
+        }
+
+        function resetToLogin() {
+            document.getElementById('login-form').reset();
+            document.getElementById('view-result').classList.add('hidden');
+            document.getElementById('view-login').classList.remove('hidden');
+            const badge = document.getElementById('header-timer');
+            badge.classList.remove('bg-rose-600', 'border-rose-400');
+            badge.classList.add('bg-white/15');
+        }
+
+        // UNDUH CSV (TUNGGAL & SEMUA REKAP)
+        function generateCSVContent(records) {
+            const headers = ['Timestamp', 'No Peserta', 'Nama Siswa', 'Kelas', 'Jawaban Benar', 'Jawaban Salah', 'Nilai Akhir'];
+            for (let i = 1; i <= 30; i++) headers.push(`Soal ${i}`);
+
+            const rows = [headers.join(',')];
+            records.forEach(r => {
+                const escapeCSV = (val) => `"${String(val).replace(/"/g, '""')}"`;
+                const rowData = [
+                    escapeCSV(r.timestamp),
+                    escapeCSV(r.noPeserta),
+                    escapeCSV(r.namaSiswa),
+                    escapeCSV(r.kelas),
+                    r.benar,
+                    r.salah,
+                    r.nilai,
+                    ...(r.detailJawaban || []).map(ans => escapeCSV(ans))
+                ];
+                rows.push(rowData.join(','));
+            });
+            return '\uFEFF' + rows.join('\n'); // BOM UTF-8 agar rapi dibuka di Microsoft Excel
+        }
+
+        function triggerCSVDownload(csvString, filename) {
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadSingleResultCSV() {
+            if (!state.lastResultPayload) return;
+            const csv = generateCSVContent([state.lastResultPayload]);
+            const safeName = state.lastResultPayload.namaSiswa.replace(/[^a-zA-Z0-9]/g, '_');
+            triggerCSVDownload(csv, `Hasil_PSAS_Inf9_${state.lastResultPayload.kelas}_${safeName}.csv`);
+            showToast('File CSV hasil ujian berhasil diunduh!');
+        }
+
+        function exportAllResultsCSV() {
+            const records = JSON.parse(localStorage.getItem(STORAGE_KEY_RESULTS) || '[]');
+            if (records.length === 0) {
+                showToast('Belum ada data hasil ujian yang tersimpan.', 'warning');
+                return;
+            }
+            const csv = generateCSVContent(records);
+            triggerCSVDownload(csv, `Rekap_Nilai_PSAS_Informatika_9_${new Date().toISOString().slice(0,10)}.csv`);
+            showToast(`Berhasil mengekspor ${records.length} data siswa ke CSV!`);
+        }
+
+        // PANEL GURU & PENGATURAN WEBHOOK
+        function openTeacherAuth() {
+            document.getElementById('teacher-pin-input').value = '';
+            document.getElementById('pin-error-msg').classList.add('hidden');
+            document.getElementById('modal-teacher-pin').classList.remove('hidden');
+            setTimeout(() => document.getElementById('teacher-pin-input').focus(), 100);
+        }
+
+        function closeTeacherPinModal() {
+            document.getElementById('modal-teacher-pin').classList.add('hidden');
+        }
+
+        function verifyTeacherPin(e) {
+            e.preventDefault();
+            const pin = document.getElementById('teacher-pin-input').value.trim();
+            if (pin === TEACHER_PIN) {
+                closeTeacherPinModal();
+                openTeacherPanel();
+            } else {
+                document.getElementById('pin-error-msg').classList.remove('hidden');
+            }
+        }
+
+        function openTeacherPanel() {
+            const savedUrl = localStorage.getItem(STORAGE_KEY_WEBHOOK) || '';
+            document.getElementById('input-webhook-url').value = savedUrl;
+            document.getElementById('webhook-feedback').classList.add('hidden');
+            renderTeacherRekapTable();
+            switchTeacherTab('tab-webhook');
+            document.getElementById('modal-teacher-panel').classList.remove('hidden');
+        }
+
+        function closeTeacherPanel() {
+            document.getElementById('modal-teacher-panel').classList.add('hidden');
+        }
+
+        function switchTeacherTab(tabId) {
+            const tabs = ['tab-webhook', 'tab-rekap', 'tab-script'];
+            tabs.forEach(id => {
+                const el = document.getElementById(id);
+                const btn = document.getElementById('btn-' + id);
+                if (id === tabId) {
+                    el.classList.remove('hidden');
+                    btn.className = 'px-4 py-2.5 rounded-t-xl font-bold text-xs sm:text-sm bg-white text-academic-700 border-t border-x border-slate-200';
+                } else {
+                    el.classList.add('hidden');
+                    btn.className = 'px-4 py-2.5 rounded-t-xl font-semibold text-xs sm:text-sm text-slate-600 hover:text-slate-900';
+                }
+            });
+            if (tabId === 'tab-rekap') renderTeacherRekapTable();
+        }
+
+        function saveWebhookUrl() {
+            const url = document.getElementById('input-webhook-url').value.trim();
+            const fb = document.getElementById('webhook-feedback');
+            if (!url) {
+                fb.textContent = 'Masukkan URL Web App Google Apps Script terlebih dahulu.';
+                fb.className = 'rounded-xl p-3 text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200';
+                fb.classList.remove('hidden');
+                return;
+            }
+            localStorage.setItem(STORAGE_KEY_WEBHOOK, url);
+            updateWebhookBadge();
+            fb.textContent = 'URL Google Spreadsheet berhasil disimpan! Hasil ujian siswa akan otomatis dikirim ke Spreadsheet.';
+            fb.className = 'rounded-xl p-3 text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200';
+            fb.classList.remove('hidden');
+            showToast('URL Spreadsheet disimpan!');
+        }
+
+        function clearWebhookUrl() {
+            localStorage.removeItem(STORAGE_KEY_WEBHOOK);
+            document.getElementById('input-webhook-url').value = '';
+            updateWebhookBadge();
+            const fb = document.getElementById('webhook-feedback');
+            fb.textContent = 'URL Spreadsheet dihapus. Aplikasi beralih ke Mode Lokal / Unduh CSV.';
+            fb.className = 'rounded-xl p-3 text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-300';
+            fb.classList.remove('hidden');
+        }
+
+        async function testWebhookConnection() {
+            const url = document.getElementById('input-webhook-url').value.trim();
+            const fb = document.getElementById('webhook-feedback');
+            if (!url || !url.startsWith('http')) {
+                fb.textContent = 'Masukkan URL Web App yang valid terlebih dahulu sebelum melakukan tes.';
+                fb.className = 'rounded-xl p-3 text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+                fb.classList.remove('hidden');
+                return;
+            }
+
+            fb.textContent = 'Mengirim data uji coba ke Google Spreadsheet...';
+            fb.className = 'rounded-xl p-3 text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200';
+            fb.classList.remove('hidden');
+
+            const dummyPayload = {
+                timestamp: new Date().toLocaleString('id-ID'),
+                noPeserta: 'TES-001',
+                namaSiswa: 'Siswa Uji Coba (Tes Koneksi)',
+                kelas: 'IX A',
+                benar: 30,
+                salah: 0,
+                nilai: 100,
+                detailJawaban: QUESTIONS.map(q => q.answer)
+            };
+
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(dummyPayload)
+                });
+                fb.textContent = 'Permintaan tes terkirim! Silakan periksa Google Spreadsheet Anda, baris "Siswa Uji Coba" seharusnya sudah muncul.';
+                fb.className = 'rounded-xl p-3 text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200';
+            } catch (err) {
+                fb.textContent = 'Gagal terhubung ke URL Apps Script. Pastikan deployment diatur ke "Anyone / Siapa saja".';
+                fb.className = 'rounded-xl p-3 text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+            }
+        }
+
+        function renderTeacherRekapTable() {
+            const records = JSON.parse(localStorage.getItem(STORAGE_KEY_RESULTS) || '[]');
+            document.getElementById('local-records-count').textContent = records.length;
+            const tbody = document.getElementById('rekap-table-body');
+
+            if (records.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="py-8 text-center text-slate-400 text-sm">
+                            Belum ada data siswa yang menyelesaikan ujian di perangkat ini.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = records.map(r => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4 text-xs text-slate-500 whitespace-nowrap">${r.timestamp}</td>
+                    <td class="py-2.5 px-4 font-mono text-xs font-semibold">${r.noPeserta}</td>
+                    <td class="py-2.5 px-4 font-semibold text-slate-800">${r.namaSiswa}</td>
+                    <td class="py-2.5 px-4 font-medium text-academic-700">${r.kelas}</td>
+                    <td class="py-2.5 px-4 text-center font-bold text-emerald-600">${r.benar}/30</td>
+                    <td class="py-2.5 px-4 text-center font-extrabold text-slate-900">${r.nilai}</td>
+                    <td class="py-2.5 px-4 text-center">
+                        ${r.synced
+                            ? '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-semibold">Terkirim</span>'
+                            : '<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-semibold">Lokal</span>'
+                        }
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function clearLocalResults() {
+            localStorage.removeItem(STORAGE_KEY_RESULTS);
+            renderTeacherRekapTable();
+            showToast('Riwayat lokal berhasil dibersihkan.');
+        }
+
+        // SALIN KODE APPS SCRIPT
+        function copyAppsScriptCode() {
+            const textarea = document.getElementById('apps-script-code');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            showToast('Kode Google Apps Script berhasil disalin!');
+        }
+
+        // NOTIFIKASI TOAST
+        let toastTimeout;
+        function showToast(message, type = 'success') {
+            const box = document.getElementById('toast-box');
+            const icon = document.getElementById('toast-icon');
+            const text = document.getElementById('toast-text');
+
+            text.textContent = message;
+            if (type === 'warning') {
+                icon.className = 'fa-solid fa-triangle-exclamation text-amber-400 text-base';
+            } else {
+                icon.className = 'fa-solid fa-circle-check text-emerald-400 text-base';
+            }
+
+            box.classList.remove('hidden');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                box.classList.add('hidden');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
